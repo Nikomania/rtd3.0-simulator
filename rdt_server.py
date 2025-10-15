@@ -18,8 +18,8 @@ def log(msg, save_log=False):
 
 def main():
     if len(sys.argv) < 3:
-        print("Uso: python rdt_server.py <ip> <porta>")
-        print("Ex.: python rdt_server.py 127.0.0.1 9000")
+        print("Uso: python rdt_server.py <ip> <porta> | tee log_servidor.txt")
+        print("Ex.: python rdt_server.py 127.0.0.1 9000 | tee log_servidor.txt")
         sys.exit(1)
 
     ip = sys.argv[1]

@@ -33,8 +33,8 @@ def update_rto(srtt, rttvar, sample):
 
 def main():
     if len(sys.argv) < 5:
-        print("Uso: python rdt_client.py <ip-servidor> <porta-servidor> <bytes_totais> <tamanho_segmento>")
-        print("Ex.: python rdt_client.py 127.0.0.1 9000 2000000 1000")
+        print("Uso: python rdt_client.py <ip-servidor> <porta-servidor> <bytes_totais> <tamanho_segmento> | tee log_cliente.txt")
+        print("Ex.: python rdt_client.py 127.0.0.1 9000 2000000 1000 | tee log_cliente.txt")
         sys.exit(1)
 
     ip = sys.argv[1]
