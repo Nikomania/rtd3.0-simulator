@@ -2,15 +2,14 @@
 import socket
 import sys
 import time
-from utils import (unpack_packet, pack_packet, FLAG_ACK, FLAG_DATA,
-                   HDR_LEN, maybe_lose, maybe_corrupt)
+from utils import (unpack_packet, pack_packet, FLAG_ACK, FLAG_DATA, maybe_lose, maybe_corrupt)
 
 # Ajuste as probabilidades do canal aqui se quiser testar do lado do servidor
 import utils
 utils.LOSS_PROB = 0.0
 utils.CORRUPT_PROB = 0.0
 
-def log(msg, save_log=False):
+def log(msg):
     print(f"[SERVER {time.strftime('%H:%M:%S')}] {msg}", flush=True)
 
 def main():
@@ -91,8 +90,7 @@ def main():
                     log(">> Simulada PERDA de ACK (duplicata)")
 
         else:
-            # não é DATA; ignore ou trate FIN conforme desejar
-            pass
+            log(">> A FLAG DATA não está setada. DESCARTA.")
 
         # estatística simples
         if start_t and received_bytes >= 1024*1024:  # quando chegar a 1MB, mostra taxa e limpa contador

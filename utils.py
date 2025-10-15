@@ -8,8 +8,8 @@ CORRUPT_PROB = 0.0      # probabilidade de corromper bits do pacote entregue
 MAX_PAYLOAD = 1024
 
 # Cabeçalho: seq(1), ack(1), flags(1), len(2), cksum(2) = 7 bytes
-HDR_FMT = "!BBBHH"
-HDR_LEN = struct.calcsize(HDR_FMT)
+HEADER_FMT = "!BBBHH"
+HEADER_LEN = struct.calcsize(HEADER_FMT)
 FLAG_ACK = 0x01
 FLAG_DATA = 0x02
 FLAG_FIN = 0x04
@@ -28,25 +28,34 @@ def internet_checksum(data: bytes) -> int:
     return (~s) & 0xFFFF
 
 def pack_packet(seq: int, ack: int, flags: int, payload: bytes) -> bytes:
+    """
+    ┌────────────────────────────────────────────┐
+    │ Cabeçalho (7 bytes)                        │
+    │  seq | ack | flags | length | checksum     │
+    │  1B  | 1B  | 1B    | 2B     | 2B           │
+    ├────────────────────────────────────────────┤
+    │ Payload (dados) — 'plen' bytes             │
+    └────────────────────────────────────────────┘
+    """
     if payload is None:
         payload = b""
     plen = len(payload)
-    hdr_wo_ck = struct.pack(HDR_FMT, seq & 1, ack & 1, flags & 0xFF, plen, 0)
-    cks = internet_checksum(hdr_wo_ck + payload)
-    hdr = struct.pack(HDR_FMT, seq & 1, ack & 1, flags & 0xFF, plen, cks)
-    return hdr + payload
+    header_no_checksum = struct.pack(HEADER_FMT, seq & 1, ack & 1, flags & 0xFF, plen, 0)
+    cks = internet_checksum(header_no_checksum + payload)
+    header = struct.pack(HEADER_FMT, seq & 1, ack & 1, flags & 0xFF, plen, cks)
+    return header + payload
 
 def unpack_packet(pkt: bytes):
-    if len(pkt) < HDR_LEN:
+    if len(pkt) < HEADER_LEN:
         return None
-    seq, ack, flags, plen, cks = struct.unpack(HDR_FMT, pkt[:HDR_LEN])
-    payload = pkt[HDR_LEN:HDR_LEN+plen]
+    seq, ack, flags, plen, cks = struct.unpack(HEADER_FMT, pkt[:HEADER_LEN])
+    payload = pkt[HEADER_LEN:HEADER_LEN+plen]
     # valida comprimento
     if len(payload) != plen:
         return None
     # valida checksum
-    hdr_wo_ck = struct.pack(HDR_FMT, seq, ack, flags, plen, 0)
-    ok = internet_checksum(hdr_wo_ck + payload) == cks
+    header_no_checksum = struct.pack(HEADER_FMT, seq, ack, flags, plen, 0)
+    ok = internet_checksum(header_no_checksum + payload) == cks
     return {
         "seq": seq, "ack": ack, "flags": flags,
         "len": plen, "checksum": cks, "payload": payload,
