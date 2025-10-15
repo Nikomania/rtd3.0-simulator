@@ -14,6 +14,8 @@ FLAG_ACK = 0x01
 FLAG_DATA = 0x02
 FLAG_FIN = 0x04
 
+LOG_FILE = "rdt_server.log"
+
 def internet_checksum(data: bytes) -> int:
     """Checksum 16-bit estilo Internet (RFC 1071)."""
     if len(data) % 2 == 1:

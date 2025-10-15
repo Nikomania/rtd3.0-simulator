@@ -10,8 +10,11 @@ import utils
 utils.LOSS_PROB = 0.0
 utils.CORRUPT_PROB = 0.0
 
-def log(msg):
+def log(msg, save_log=False):
     print(f"[SERVER {time.strftime('%H:%M:%S')}] {msg}", flush=True)
+    if save_log:
+        with open(utils.LOG_FILE, "a") as f:
+            f.write(f"[SERVER {time.strftime('%H:%M:%S')}] {msg}\n")
 
 def main():
     if len(sys.argv) < 3:
