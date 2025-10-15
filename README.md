@@ -67,10 +67,10 @@ python rdt_server.py 127.0.0.1 9000
 ```
 
 ##### Terminal 2 — Cliente
-Envie 2 MB em blocos de 1000 bytes:
+Envie 1 KB em blocos de 1000 bytes:
 
 ```bash
-python rdt_client.py 127.0.0.1 9000 2000000 1000
+python rdt_client.py 127.0.0.1 9000 1000 1000
 ```
 
 ## 🧩 Parâmetros
@@ -78,12 +78,12 @@ python rdt_client.py 127.0.0.1 9000 2000000 1000
 ### Cliente:
 
 ```bash
-python rdt_client.py <ip-servidor> <porta-servidor> <bytes_totais> <tamanho_segmento>
+python rdt_client.py <ip-servidor> <porta-servidor> <bytes_totais> <tamanho_segmento> | tee log_cliente.txt
 ```
 ### Servidor:
 
 ```bash
-python rdt_server.py <ip> <porta>
+python rdt_server.py <ip> <porta> | tee log_servidor.txt
 
 ```
 ### Configuração de Perda e Corrupção de Pacotes:
